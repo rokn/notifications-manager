@@ -17,3 +17,5 @@
 
 # Configs
 channels.dev.yaml
+
+.DS_Store

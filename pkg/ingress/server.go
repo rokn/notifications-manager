@@ -70,7 +70,6 @@ func (s *server) Start() error {
 // @Security BasicAuth
 // @Router /notification [post]
 func (s *server) postNotification(c *gin.Context) {
-	c.MustGet(gin.AuthUserKey)
 	notification := NotificationDTO{}
 	if err := c.BindJSON(&notification); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})

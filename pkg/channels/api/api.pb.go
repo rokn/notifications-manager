@@ -271,9 +271,9 @@ var file_api_channels_api_proto_goTypes = []any{
 	(*GetChannelNamesResponse)(nil), // 3: GetChannelNamesResponse
 }
 var file_api_channels_api_proto_depIdxs = []int32{
-	0, // 0: ChannelsService.GetChannelName:input_type -> GetChannelRequest
+	0, // 0: ChannelsService.GetChannel:input_type -> GetChannelRequest
 	2, // 1: ChannelsService.GetChannelNames:input_type -> GetChannelNamesRequest
-	1, // 2: ChannelsService.GetChannelName:output_type -> GetChannelResponse
+	1, // 2: ChannelsService.GetChannel:output_type -> GetChannelResponse
 	3, // 3: ChannelsService.GetChannelNames:output_type -> GetChannelNamesResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type

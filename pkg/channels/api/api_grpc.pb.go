@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ChannelsService_GetChannel_FullMethodName      = "/ChannelsService/GetChannelName"
+	ChannelsService_GetChannel_FullMethodName      = "/ChannelsService/GetChannel"
 	ChannelsService_GetChannelNames_FullMethodName = "/ChannelsService/GetChannelNames"
 )
 
@@ -76,7 +76,7 @@ type ChannelsServiceServer interface {
 type UnimplementedChannelsServiceServer struct{}
 
 func (UnimplementedChannelsServiceServer) GetChannel(context.Context, *GetChannelRequest) (*GetChannelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetChannelName not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method GetChannel not implemented")
 }
 func (UnimplementedChannelsServiceServer) GetChannelNames(context.Context, *GetChannelNamesRequest) (*GetChannelNamesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChannelNames not implemented")
@@ -146,7 +146,7 @@ var ChannelsService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ChannelsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetChannelName",
+			MethodName: "GetChannel",
 			Handler:    _ChannelsService_GetChannel_Handler,
 		},
 		{
