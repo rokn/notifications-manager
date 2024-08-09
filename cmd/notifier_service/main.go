@@ -24,6 +24,7 @@ func main() {
 	cfg := notifierConfig{}
 	logger := config.InitConfigWithLogger(&cfg)
 
+	logger.Info("connecting to channels server", zap.String("url", cfg.ChannelsServerURL))
 	channelsClient := channels.NewClient(cfg.ChannelsServerURL, logger)
 	defer func() {
 		err := channelsClient.Close()
@@ -32,9 +33,11 @@ func main() {
 		}
 	}()
 
+	logger.Info("initializing notifier", zap.String("type", string(cfg.ChannelType)))
 	notifier := initNotifier(cfg.ChannelType, logger)
 	handler := notifiers.NewNotificationHandler(channelsClient, notifier, logger)
 
+	logger.Info("starting consumer", zap.String("uri", cfg.RabbitURI))
 	consumer := queue.NewRabbitConsumer(cfg.RabbitURI, cfg.ChannelType, queue.DefaultNotificationRouter(), handler, logger)
 	if err := consumer.Start(); err != nil {
 		logger.Fatal("failed to start consumer", zap.Error(err))

@@ -1,6 +1,7 @@
 services:
   rabbitmq:
     image: rabbitmq:3-management
+    restart: always
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -10,6 +11,58 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
       - rabbitmq-log:/var/log/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 10s
+      retries: 3
+  ingress:
+    image: ingress_service
+    build:
+      context: .
+      dockerfile: build/ingress/Dockerfile
+    restart: always
+    environment:
+      RABBIT_URI: "amqp://guest:guest@rabbitmq:5672/"
+      CHANNELS_SERVER_URL: "channels:8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      channels:
+        condition: service_started
+  channels:
+    image: channels_service
+    build:
+      context: .
+      dockerfile: build/channels/Dockerfile
+    restart: always
+    volumes:
+      - ./channels.dev.yaml:/app/channels.yaml
+  notifier-email:
+    image: notifier_service
+    build:
+      context: .
+      dockerfile: build/notifier/Dockerfile
+    restart: always
+    environment:
+      CHANNELS_SERVER_URL: "channels:8080"
+      RABBIT_URI: "amqp://guest:guest@rabbitmq:5672/"
+      CHANNEL_TYPE: "email"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+  notifier-slack:
+    image: notifier
+    restart: always
+    environment:
+      CHANNELS_SERVER_URL: "channels:8080"
+      RABBIT_URI: "amqp://guest:guest@rabbitmq:5672/"
+      CHANNEL_TYPE: "slack"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
   rabbitmq-data:
