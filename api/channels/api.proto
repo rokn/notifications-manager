@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "pkg/channels/api";
+
+service ChannelsService {
+  rpc GetChannel(GetChannelRequest) returns (GetChannelResponse);
+  rpc GetChannelNames(GetChannelNamesRequest) returns (GetChannelNamesResponse);
+}
+
+message GetChannelRequest {
+  // The name of the channel to get
+  string name = 1;
+}
+
+message GetChannelResponse {
+  // The name of the channel, this is the unique identifier
+  string name = 1;
+  // The type of the channel(Slack, SMS, Email, etc)
+  string type = 2;
+  // Bytes representation of the json configuration
+  bytes configuration = 3;
+}
+
+message GetChannelNamesRequest {
+}
+
+message GetChannelNamesResponse {
+  // The names of the channels
+  repeated string names = 1;
+}

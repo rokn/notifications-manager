@@ -1,0 +1,12 @@
+channels:
+  - name: email-notify
+    type: email
+  - name: slack-notify
+    type: slack
+    configuration:
+      token: # Sercret Token
+      channel_id: # Channel Id
+#    configuration:
+#      to: testemail@gmail.com
+#      from: testsender@gmail.com
+

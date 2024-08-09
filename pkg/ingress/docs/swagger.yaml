@@ -1,0 +1,102 @@
+basePath: /api/v1
+definitions:
+  ingress.ChannelsResponse:
+    properties:
+      channels:
+        description: List of channel names
+        items:
+          type: string
+        type: array
+    type: object
+  ingress.ErrorResponse:
+    properties:
+      error:
+        description: Error message
+        type: string
+    type: object
+  ingress.NotificationDTO:
+    properties:
+      channels:
+        description: Name of the channels to send the notification to
+        example:
+        - email
+        items:
+          type: string
+        minItems: 1
+        type: array
+      message:
+        description: Body of the notification
+        example: This is a test notification
+        type: string
+      metadata:
+        additionalProperties:
+          type: string
+        description: Additional metadata
+        type: object
+      title:
+        description: Title of the notification
+        example: Hello World
+        type: string
+    required:
+    - message
+    type: object
+  ingress.NotificationResponse:
+    properties:
+      message:
+        description: Message indicating the status of the notification
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is the API for the ingress service of the notifications manager
+  title: Notifications Manager Ingress API
+  version: "1.0"
+paths:
+  /channels:
+    get:
+      description: Returns the list of channels that are available in the system.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ingress.ChannelsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ingress.ErrorResponse'
+      summary: Get the list of channels
+  /notification:
+    post:
+      consumes:
+      - application/json
+      description: Submits a new notification for the given channels which will be
+        sent out by the system.
+      parameters:
+      - description: Notification object that needs to be sent
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/ingress.NotificationDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ingress.NotificationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ingress.ErrorResponse'
+        "401":
+          description: Unauthorized
+      security:
+      - BasicAuth: []
+      summary: Create a notification
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
