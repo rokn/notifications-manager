@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingress
+  template:
+    metadata:
+      labels:
+        app: ingress
+    spec:
+      containers:
+        - name: ingress
+          image: ingress_service
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: RABBIT_URI
+              value: "amqp://guest:guest@rabbitmq:5672/"
+            - name: CHANNELS_SERVER_URL
+              value: "channels:8080"

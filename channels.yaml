@@ -1,12 +1,15 @@
 channels:
   - name: email-notify
     type: email
+    configuration:
+      to: test@email.com
+      username: from@email.com
+      password: pass
+      host: smtp.gmail.com
+      port: 587
   - name: slack-notify
     type: slack
     configuration:
-      token: # Sercret Token
-      channel_id: # Channel Id
-#    configuration:
-#      to: testemail@gmail.com
-#      from: testsender@gmail.com
+      token: xoxb-random-token
+      channel_id: C0000000000
 

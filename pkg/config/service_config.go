@@ -22,7 +22,7 @@ type DefaultConfig struct {
 	// Port to listen on
 	Port int `env:"PORT" envDefault:"8080"`
 	// Profile to run the service
-	Profile ProfileType `env:"PROFILE" envDefault:"development"`
+	Profile ProfileType `env:"PROFILE" envDefault:"production"`
 }
 
 func (cfg *DefaultConfig) GetPort() int {

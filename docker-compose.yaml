@@ -54,7 +54,7 @@ services:
       rabbitmq:
         condition: service_healthy
   notifier-slack:
-    image: notifier
+    image: notifier_service
     restart: always
     environment:
       CHANNELS_SERVER_URL: "channels:8080"

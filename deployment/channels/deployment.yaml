@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: channels
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: channels
+  template:
+    metadata:
+      labels:
+        app: channels
+    spec:
+      containers:
+        - name: channels
+          image: channels_service
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config-volume
+              readOnly: true
+              mountPath: "/app/config"
+          env:
+            - name: CHANNELS_CONFIG
+              value: "/app/config/channels.yaml"
+      volumes:
+        - name: config-volume
+          secret:
+            secretName: channels-config-secret
