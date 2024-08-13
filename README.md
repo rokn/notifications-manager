@@ -1,5 +1,31 @@
 # Notifications Manager
 
+## Overview
+```mermaid
+sequenceDiagram
+    participant User
+    participant IngressAPI as Ingress API
+    participant ChannelsService as Channels Service
+    participant RabbitMQ as RabbitMQ Service
+    participant SlackNotifier as Notifier Service - Slack
+    participant EmailNotifier as Notifier Service - Email
+
+    User ->> IngressAPI: Send notification
+
+    IngressAPI->>RabbitMQ: Send messages for every channel
+    IngressAPI->>ChannelsService: Get channel configurations
+
+    RabbitMQ->>SlackNotifier: Receive Slack notification
+    RabbitMQ->>EmailNotifier: Receive Email notification
+
+    SlackNotifier->>ChannelsService: Access channel configurations
+    EmailNotifier->>ChannelsService: Access channel configurations
+
+    SlackNotifier->>Slack: Send Slack notification
+    EmailNotifier->>Email Server: Send Email notification
+
+```
+
 ## Requirements
 
 - Go `1.22`
