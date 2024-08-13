@@ -2,6 +2,7 @@ package queue
 
 import (
 	"encoding/json"
+	"github.com/cenkalti/backoff/v4"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/rokn/notifications-manager/pkg/channels"
 	"go.uber.org/zap"
@@ -22,6 +23,7 @@ type rabbitConsumer struct {
 	router      NotificationRouter
 	handler     NotificationHandler
 	log         *zap.Logger
+	backoff     *backoff.ExponentialBackOff
 }
 
 func NewRabbitConsumer(
@@ -59,6 +61,7 @@ func NewRabbitConsumer(
 		log:         log,
 		handler:     handler,
 		router:      notificationRouter,
+		backoff:     backoff.NewExponentialBackOff(),
 	}
 }
 
@@ -115,7 +118,9 @@ func (r *rabbitConsumer) Start() error {
 			continue
 		}
 
-		err = r.handler.HandleNotification(*channel, *parsedBody)
+		err = backoff.Retry(func() error {
+			return r.handler.HandleNotification(*channel, *parsedBody)
+		}, r.backoff)
 		if err != nil {
 			r.log.Error("failed to handle notification", zap.Error(err))
 			r.nackMessage(&msg, true)
@@ -132,7 +137,7 @@ func (r *rabbitConsumer) Start() error {
 }
 
 func (r *rabbitConsumer) nackMessage(msg *amqp.Delivery, requeue bool) {
-	err := msg.Nack(false, false)
+	err := msg.Nack(false, requeue)
 	if err != nil {
 		r.log.Error("failed to nack message", zap.Error(err))
 	}

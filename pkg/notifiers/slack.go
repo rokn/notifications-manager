@@ -22,6 +22,7 @@ func NewSlackNotifier(logger *zap.Logger) Notifier {
 
 func (s *slackNotifier) SendNotification(channel *channels.ChannelModel, notification queue.NotificationMessage) error {
 	s.log.Info("sending Slack notification", zap.String("channel", channel.Name))
+	return fmt.Errorf("not implemented")
 	client, err := s.getSlackClient(channel)
 	if err != nil {
 		return err
